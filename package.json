@@ -1,0 +1,20 @@
+{
+    "name": "p2p-file-transfer",
+    "version": "0.1",
+    "description": "Demo of peer2peer file transfer between browsers through a simple broker server.",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "webrtc"
+    ],
+    "private": true,
+    "devDependencies": {
+        "jscs": "^3.0.7",
+        "jshint": "^2.9.5"
+    },
+    "dependencies": {
+        "@types/websocket": "0.0.34",
+        "express": "^4.16.2",
+        "webrtc-adapter": "^5.0.6",
+        "websocket": "^1.0.25"
+    }
+}

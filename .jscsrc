@@ -1,0 +1,18 @@
+{
+    "disallowMultipleLineBreaks": true,
+    "validateLineBreaks": "CRLF",
+    "requireCurlyBraces": [
+        "if",
+        "else",
+        "for",
+        "while",
+        "do",
+        "try",
+        "catch"
+    ],
+    "disallowNewlineBeforeBlockStatements": true,
+    "validateQuoteMarks": "'",
+    "disallowTrailingComma": true,
+    "disallowTrailingWhitespace": true,
+    "validateIndentation": 4
+}

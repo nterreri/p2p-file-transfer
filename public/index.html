@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <body>
+        <button id="sendOffer">Send offer</button>
+        <br/>
+        <button id="registerResponder">Register as offer responder</button>
+    </body>
+    <script src="adapter.js"></script>
+    <script src="SignalingClient.js" type="module"></script>
+    <script type="module">
+        import {sendOffer, registerAsAnswerer} from "./SignalingClient.js";
+
+        document.getElementById('sendOffer').onclick = sendOffer;
+
+        document.getElementById('registerResponder').onclick = registerAsAnswerer;
+    </script>
+</html>

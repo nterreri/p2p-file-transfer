@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <body>
+        <button id="sendOffer">Send offer</button>
+    </body>
+    <script src="adapter.js"></script>
+    <script src="SignalingClient.js" type="module"></script>
+    <script type="module">
+        import {sendOffer} from "./SignalingClient.js";
+
+        document.getElementById('sendOffer').onclick = sendOffer;
+    </script>
+</html>

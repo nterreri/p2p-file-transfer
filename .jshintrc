@@ -1,0 +1,10 @@
+{
+    "strict": "global",
+    "esversion": 6,
+    "unused": true,
+    "undef": true,
+    "devel": true,
+    "globals": {
+        "RTCPeerConnection": false
+    }
+}
