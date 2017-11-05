@@ -7,6 +7,8 @@ const websocket = require('websocket');
 
 const staticFileServer = express();
 staticFileServer.use('/', express.static(`${__dirname}/public`));
+staticFileServer.use('/offerer', express.static(`${__dirname}/public/offerer.html`));
+staticFileServer.use('/answerer', express.static(`${__dirname}/public/answerer.html`));
 
 const httpServer = http.createServer(staticFileServer);
 

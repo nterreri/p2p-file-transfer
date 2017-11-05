@@ -19,12 +19,14 @@ function setUpDataTransferSession(offererDescription) {
         descr => {
             connection.setLocalDescription(descr);
             webSocket.send(JSON.stringify(descr));
-            console.info('Sent answerer session description after setting offerer description as remote and local description.');
+            console.info('Sent answerer session description after setting offerer description as remote and having set local description.');
         }
     );
 }
 
 function listenForMessages(dataChannel) {
+    let fileMetadata;
+
     dataChannel.onmessage = (rtcMessage) => {
         const data = rtcMessage.data;
         console.info('Answerer received RTC message:', data);
@@ -33,7 +35,14 @@ function listenForMessages(dataChannel) {
             fileReceived = new Blob([data]);
             console.info('Answerer received file of size:', fileReceived.size);
 
-            fileReceivedHandler && fileReceivedHandler(fileReceived);
+            fileReceivedHandler && fileReceivedHandler(fileReceived, fileMetadata);
+            return;
+        }
+
+        const payload = JSON.parse(data);
+        if (payload.type === 'file-metadata') {
+            console.info('Received file metadata for file:', payload.name);
+            fileMetadata = {name: payload.name, size: payload.size};
         }
     };
 }

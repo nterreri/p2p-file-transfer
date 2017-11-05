@@ -64,6 +64,8 @@ export function sendFile(file) {
     }
 
     console.log('Preparing to send file:', file.name, 'of size:', file.size);
+    dataChannel.send(JSON.stringify({type: 'file-metadata', name: file.name, size: file.size}));
+
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
         dataChannel.send(e.target.result);

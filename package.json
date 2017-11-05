@@ -4,7 +4,8 @@
     "description": "Demo of peer2peer file transfer between browsers through a simple broker server.",
     "license": "BSD-3-Clause",
     "keywords": [
-        "webrtc"
+        "webrtc",
+        "websocket"
     ],
     "private": true,
     "devDependencies": {

@@ -17,10 +17,11 @@
         document.getElementById('sendOffer').onclick = sendOffer;
         document.getElementById('sendFile').addEventListener('change', (e) => sendFile(e.target.files[0]));
         document.getElementById('registerResponder').onclick = registerAsAnswerer;
-        onFileReceived((fileReceived) => {
+        onFileReceived((file, metadata) => {
             const downloadButton = document.getElementById('downloadFile');
-            downloadButton.href = URL.createObjectURL(fileReceived);
+            downloadButton.href = URL.createObjectURL(file);
             downloadButton.style.display = 'block';
+            !!metadata && (downloadButton.download = metadata.name);
         });
     </script>
 </html>
