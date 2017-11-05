@@ -1,6 +1,9 @@
 // jshint browser: true
 'use strict';
 
+let fileReceived;
+let fileReceivedHandler;
+
 export function registerAsAnswerer() {
     const answererConnection = new RTCPeerConnection();
     const answererWebSocket = new WebSocket('ws://localhost:8085', 'json');
@@ -26,20 +29,18 @@ export function registerAsAnswerer() {
 
             const offererDescription = payload;
 
-            answererConnection.ondatachannel = (e) => {
+            answererConnection.ondatachannel = (event) => {
                 console.info('Answerer received data channel');
 
-                e.channel.onmessage = (e) => {
-                    const data = e.data;
+                event.channel.onmessage = (rtcMessage) => {
+                    const data = rtcMessage.data;
                     console.info('Answerer received RTC message:', data);
 
                     if (data instanceof ArrayBuffer) {
-                        const received = new Blob([data]);
-                        console.info('Answerer received file of size:', received.size);
+                        fileReceived = new Blob([data]);
+                        console.info('Answerer received file of size:', fileReceived.size);
 
-                        const downloadButton = document.getElementById('downloadFile');
-                        downloadButton.href = URL.createObjectURL(received);
-                        downloadButton.style.display = 'block';
+                        fileReceivedHandler && fileReceivedHandler(fileReceived);
                     }
                 };
             };
@@ -61,4 +62,10 @@ export function registerAsAnswerer() {
             );
         }
     };
+}
+
+export function onFileReceived(handler) {
+    if (handler instanceof Function) {
+        fileReceivedHandler = handler;
+    }
 }

@@ -6,5 +6,7 @@
     "devel": true,
     "globals": {
         "RTCPeerConnection": false
-    }
+    },
+    "shadow": "outer",
+    "expr": true
 }

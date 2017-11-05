@@ -8,8 +8,13 @@
     <script src="adapter.js"></script>
     <script src="signaling/Answerer.js" type="module"></script>
     <script type="module">
-        import {registerAsAnswerer} from "./signaling/Answerer.js";
+        import {registerAsAnswerer, onFileReceived} from "./signaling/Answerer.js";
 
         document.getElementById('registerResponder').onclick = registerAsAnswerer;
+        onFileReceived((fileReceived) => {
+            const downloadButton = document.getElementById('downloadFile');
+            downloadButton.href = URL.createObjectURL(fileReceived);
+            downloadButton.style.display = 'block';
+        });
     </script>
 </html>

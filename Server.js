@@ -14,7 +14,6 @@ const webSocket = new websocket.server({
     httpServer: httpServer
 });
 
-let offer;
 let offerer;
 let answerer;
 
@@ -32,11 +31,10 @@ webSocket.on('request', (request) => {
 
         if (payload.type === 'offer') {
             offerer = connection;
-            offer = payload.sdp;
 
             if (!!answerer) {
                 answerer.send(JSON.stringify(payload));
-                console.info('Sending offer to answerer after recoring new offerer and offer.');
+                console.info('Sending offer to answerer after recoring new offerer.');
             }
         }
 

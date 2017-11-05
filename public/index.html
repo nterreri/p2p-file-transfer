@@ -12,10 +12,15 @@
     <script src="signaling/Answerer.js" type="module"></script>
     <script type="module">
         import {sendOffer, sendFile} from "./signaling/Offerer.js";
-        import {registerAsAnswerer} from "./signaling/Answerer.js";
+        import {registerAsAnswerer, onFileReceived} from "./signaling/Answerer.js";
 
         document.getElementById('sendOffer').onclick = sendOffer;
         document.getElementById('sendFile').addEventListener('change', (e) => sendFile(e.target.files[0]));
         document.getElementById('registerResponder').onclick = registerAsAnswerer;
+        onFileReceived((fileReceived) => {
+            const downloadButton = document.getElementById('downloadFile');
+            downloadButton.href = URL.createObjectURL(fileReceived);
+            downloadButton.style.display = 'block';
+        });
     </script>
 </html>

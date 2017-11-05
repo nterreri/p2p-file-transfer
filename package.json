@@ -8,11 +8,11 @@
     ],
     "private": true,
     "devDependencies": {
+        "@types/websocket": "0.0.34",
         "jscs": "^3.0.7",
         "jshint": "^2.9.5"
     },
     "dependencies": {
-        "@types/websocket": "0.0.34",
         "express": "^4.16.2",
         "webrtc-adapter": "^5.0.6",
         "websocket": "^1.0.25"
