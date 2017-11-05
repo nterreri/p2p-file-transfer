@@ -2,13 +2,15 @@
 <html>
     <meta charset="UTF-8">
     <body>
-        <button id="sendOffer">Send offer</button>
+        <button id="sendOffer" style="margin-top:5px;">Send offer</button>
+        <input type="file" id="sendFile" style="margin-top:5px;" />
     </body>
     <script src="adapter.js"></script>
-    <script src="SignalingClient.js" type="module"></script>
+    <script src="signaling/Offerer.js" type="module"></script>
     <script type="module">
-        import {sendOffer} from "./SignalingClient.js";
+        import {sendOffer, sendFile} from "./signaling/Offerer.js";
 
         document.getElementById('sendOffer').onclick = sendOffer;
+        document.getElementById('sendFile').addEventListener('change', (e) => sendFile(e.target.files[0]));
     </script>
 </html>

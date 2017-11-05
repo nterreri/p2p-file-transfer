@@ -2,12 +2,13 @@
 <html>
     <meta charset="UTF-8">
     <body>
-        <button id="registerResponder">Register as offer responder</button>
+        <button id="registerResponder" style="margin-top:5px;">Register as offer responder</button>
+        <a id="downloadFile" style="display: none; margin-top:10px;">Download uploaded file</a>
     </body>
     <script src="adapter.js"></script>
-    <script src="SignalingClient.js" type="module"></script>
+    <script src="signaling/Answerer.js" type="module"></script>
     <script type="module">
-        import {registerAsAnswerer} from "./SignalingClient.js";
+        import {registerAsAnswerer} from "./signaling/Answerer.js";
 
         document.getElementById('registerResponder').onclick = registerAsAnswerer;
     </script>

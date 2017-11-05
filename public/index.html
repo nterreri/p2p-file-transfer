@@ -2,17 +2,20 @@
 <html>
     <meta charset="UTF-8">
     <body>
-        <button id="sendOffer">Send offer</button>
-        <br/>
-        <button id="registerResponder">Register as offer responder</button>
+        <button id="sendOffer" style="margin-top:5px;">Send offer</button>
+        <button id="registerResponder" style="margin-top:5px;">Register as offer responder</button>
+        <input type="file" id="sendFile" style="margin-top:5px;" />
+        <a id="downloadFile" style="display: none; margin-top:10px;">Download uploaded file</a>
     </body>
     <script src="adapter.js"></script>
-    <script src="SignalingClient.js" type="module"></script>
+    <script src="signaling/Offerer.js" type="module"></script>
+    <script src="signaling/Answerer.js" type="module"></script>
     <script type="module">
-        import {sendOffer, registerAsAnswerer} from "./SignalingClient.js";
+        import {sendOffer, sendFile} from "./signaling/Offerer.js";
+        import {registerAsAnswerer} from "./signaling/Answerer.js";
 
         document.getElementById('sendOffer').onclick = sendOffer;
-
+        document.getElementById('sendFile').addEventListener('change', (e) => sendFile(e.target.files[0]));
         document.getElementById('registerResponder').onclick = registerAsAnswerer;
     </script>
 </html>
