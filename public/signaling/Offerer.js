@@ -5,13 +5,29 @@ let webSocket;
 let connection;
 let dataChannel;
 
-function parseSocketMessage(message) {
+function handleSocketMessage(message) {
     const payload = JSON.parse(message);
+
+    if (payload.type === 'registration-success') {
+        connection = new RTCPeerConnection();
+        console.info('Signaling server acknowledged registration.');
+        return;
+    }
+
+    if (payload.type === 'session-granted') {
+        initializeDataTransferSession();
+    }
+
+    if (payload.type === 'session-rejected') {
+        console.error('Failed to initialize session with user', payload.remoteUserId, 'as the server rejected the request.');
+    }
+
     if (payload.type === 'answer') {
         console.log('Setting RTC session answer description after receiving an answer message from the web socket.');
 
         const answererDescription = payload;
         connection.setRemoteDescription(answererDescription);
+        return;
     }
 
     if (payload.type === 'ICE') {
@@ -19,14 +35,27 @@ function parseSocketMessage(message) {
             () => console.info('Offerer added ICE candidate', payload.candidate.usernameFragment, 'successfully.'),
             (error) => console.error('Offerer failed to add ICE candidate due to', error)
         );
+        return;
     }
 }
 
+export function sendFileTo(recepientId) {
+    webSocket.send(JSON.stringify({type: 'request-session', recepientId: recepientId}));
+}
+
 function initializeDataTransferSession() {
-    console.log('Setting up RTC session offer as connection to web socket has opened.');
+    console.log('Setting up RTC session offer after signaling server acknowledgement.');
 
     dataChannel = connection.createDataChannel('demoChannel');
     dataChannel.binarytype = 'arraybuffer';
+
+    connection.onicecandidate = (e) => {
+        if (!e.candidate) {
+            return;
+        }
+
+        webSocket.send(JSON.stringify({type: 'ICE-offerer', candidate: e.candidate}));
+    };
 
     connection.createOffer().then(
         descr => {
@@ -37,24 +66,15 @@ function initializeDataTransferSession() {
     );
 }
 
-function setUpWebSocket() {
-    webSocket.onmessage = (e) => parseSocketMessage(e.data);
-    webSocket.onopen = initializeDataTransferSession;
+export function openWebSocket(userId) {
+    webSocket = new WebSocket('ws://localhost:8085', 'json');
+    webSocket.onmessage = (e) => handleSocketMessage(e.data);
+    webSocket.onopen = () => registerAs(userId);
 }
 
-export function sendOffer() {
-    connection = new RTCPeerConnection();
-    webSocket = new WebSocket('ws://localhost:8085', 'json');
-
-    connection.onicecandidate = (e) => {
-        if (!e.candidate) {
-            return;
-        }
-
-        webSocket.send(JSON.stringify({type: 'ICE-offerer', candidate: e.candidate}));
-    };
-
-    setUpWebSocket();
+function registerAs(userId) {
+    console.log('Registering with signaling server as user:', userId);
+    webSocket.send(JSON.stringify({type: 'register', userId: userId}));
 }
 
 export function sendFile(file) {

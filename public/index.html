@@ -2,21 +2,31 @@
 <html>
     <meta charset="UTF-8">
     <body>
-        <button id="sendOffer" style="margin-top:5px;">Send offer</button>
-        <button id="registerResponder" style="margin-top:5px;">Register as offer responder</button>
-        <input type="file" id="sendFile" style="margin-top:5px;" />
-        <a id="downloadFile" style="display: none; margin-top:10px;" download>Download uploaded file</a>
+        <div style="max-width:500px;">
+            <h2 style="margin:5px;">Offerer</h2>
+            <input type="text" id="offererId" style="margin:5px;" placeholder="Enter your user ID"/>
+            <button id="openOffererSocket" style="margin:5px;">Open offerer web socket</button>
+            <input type="text" id="recepientId" style="display: inline-block; margin:5px;" placeholder="Enter file recepient ID"/>
+            <input type="file" id="sendFile" style="display: inline-block; margin:5px;"/>
+            <button id="sendFile" style="display: block; margin:5px;">Send file to recepient</button>
+        </div>
+        <div style="max-width:500px;">
+            <h2>Answerer</h2>
+            <input type="text" id="answererId" style="margin:5px;" placeholder="Enter your user ID"/>
+            <button id="openAnswererSocket" style="margin-top:5px;">Open answerer web socket</button>
+            <a id="downloadFile" style="display: none; margin-top:10px;" download>Download uploaded file</a>
+        </div>
     </body>
     <script src="adapter.js"></script>
     <script src="signaling/Offerer.js" type="module"></script>
     <script src="signaling/Answerer.js" type="module"></script>
     <script type="module">
-        import {sendOffer, sendFile} from "./signaling/Offerer.js";
+        import {openWebSocket, sendFile} from "./signaling/Offerer.js";
         import {registerAsAnswerer, onFileReceived} from "./signaling/Answerer.js";
 
-        document.getElementById('sendOffer').onclick = sendOffer;
+        document.getElementById('openOffererSocket').onclick = () => openWebSocket(document.getElementById('offererId').value);
         document.getElementById('sendFile').addEventListener('change', (e) => sendFile(e.target.files[0]));
-        document.getElementById('registerResponder').onclick = registerAsAnswerer;
+        document.getElementById('openAnswererSocket').onclick = registerAsAnswerer;
         onFileReceived((file, metadata) => {
             const downloadButton = document.getElementById('downloadFile');
             downloadButton.href = URL.createObjectURL(file);
