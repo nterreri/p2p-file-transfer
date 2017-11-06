@@ -36,7 +36,7 @@ webSocket.on('request', (request) => {
 
             if (!!answerer) {
                 answerer.send(JSON.stringify(payload));
-                console.info('Sending offer to answerer after recoring new offerer.');
+                console.info('Sending offer to answerer after recording new offerer.');
             }
         }
 

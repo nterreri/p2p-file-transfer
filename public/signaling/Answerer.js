@@ -3,7 +3,6 @@
 
 let webSocket;
 let connection;
-let fileReceived;
 let fileReceivedHandler;
 
 function setUpDataTransferSession(offererDescription) {
@@ -26,16 +25,26 @@ function setUpDataTransferSession(offererDescription) {
 
 function listenForMessages(dataChannel) {
     let fileMetadata;
+    let totalBytesReceived = 0;
+    let chunks = [];
 
     dataChannel.onmessage = (rtcMessage) => {
         const data = rtcMessage.data;
         console.info('Answerer received RTC message:', data);
 
         if (data instanceof ArrayBuffer) {
-            fileReceived = new Blob([data]);
-            console.info('Answerer received file of size:', fileReceived.size);
+            console.info('Answerer received chunk of size:', data.byteLength);
+            totalBytesReceived += data.byteLength;
+            chunks.push(data);
+
+            if (fileMetadata.size > totalBytesReceived) {
+                return;
+            }
+            const fileReceived = new Blob(chunks);
+            console.info('Answerer finished receiving a file of size:', fileReceived.size);
 
             fileReceivedHandler && fileReceivedHandler(fileReceived, fileMetadata);
+
             return;
         }
 

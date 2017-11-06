@@ -66,11 +66,42 @@ export function sendFile(file) {
     console.log('Preparing to send file:', file.name, 'of size:', file.size);
     dataChannel.send(JSON.stringify({type: 'file-metadata', name: file.name, size: file.size}));
 
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-        dataChannel.send(e.target.result);
-        console.info('File was sent to peer.');
-    };
+    sendFileInChunks(file);
+}
 
-    fileReader.readAsArrayBuffer(file);
+function sendFileInChunks(file) {
+    const chunkSize = 16384;
+    let offset = 0;
+
+    const chunks = [];
+
+    if (file.size < offset + chunkSize) {
+        sendChunkAsync(file);
+        return;
+    }
+
+    while (file.size > offset) {
+        chunks.push(file.slice(offset, offset + chunkSize));
+        offset += chunkSize;
+    }
+
+    Promise.all(chunks.map(sendChunkAsync))
+        .then(() => console.info('Finished sending file to peer.'));
+}
+
+function sendChunkAsync(chunk) {
+    return readAsArrayBufferAsync(chunk).then((arrayBuffer) => {
+        dataChannel.send(arrayBuffer);
+        console.log('File chunk of size', arrayBuffer.byteLength, 'was sent to peer.');
+        return Promise.resolve();
+    });
+}
+
+function readAsArrayBufferAsync(chunk) {
+    // Data must be sent as ArrayBuffer instances
+    return new Promise((resolve) => {
+        const fileReader = new FileReader();
+        fileReader.onload = (e) => resolve(e.target.result);
+        fileReader.readAsArrayBuffer(chunk);
+    });
 }
